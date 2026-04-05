@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "node --watch index.js",
     "start": "node index.js",
     "seed": "node scripts/seed.js"
   },
@@ -17,8 +17,5 @@
     "mongoose": "^8.6.1",
     "morgan": "^1.10.0",
     "ws": "^8.18.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.4"
   }
 }
