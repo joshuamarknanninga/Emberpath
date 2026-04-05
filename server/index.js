@@ -33,6 +33,11 @@ wss.on('connection', (socket) => {
   );
 });
 
+wss.on('error', (error) => {
+  // prevent unhandled error crash from ws when HTTP server emits startup errors
+  console.warn(`[ws] ${error.code || 'error'}: ${error.message}`);
+});
+
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(morgan('dev'));
@@ -51,24 +56,27 @@ app.use(errorHandler);
 
 const DEFAULT_PORT = Number(process.env.PORT || 5000);
 const MAX_PORT_ATTEMPTS = 10;
+let attempts = 0;
+let currentPort = DEFAULT_PORT;
 
-const startServer = (port, attempt = 0) => {
-  server
-    .listen(port, () => {
-      const isFallback = port !== DEFAULT_PORT;
-      console.log(`Server + WS running on ${port}${isFallback ? ` (fallback from ${DEFAULT_PORT})` : ''}`);
-    })
-    .once('error', (error) => {
-      if (error.code === 'EADDRINUSE' && attempt < MAX_PORT_ATTEMPTS) {
-        const nextPort = port + 1;
-        console.warn(`Port ${port} is in use. Retrying on ${nextPort}...`);
-        setTimeout(() => startServer(nextPort, attempt + 1), 250);
-        return;
-      }
-
-      console.error('Server failed to start:', error.message);
-      process.exit(1);
-    });
+const listen = () => {
+  server.listen(currentPort, () => {
+    const isFallback = currentPort !== DEFAULT_PORT;
+    console.log(`Server + WS running on ${currentPort}${isFallback ? ` (fallback from ${DEFAULT_PORT})` : ''}`);
+  });
 };
 
-startServer(DEFAULT_PORT);
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE' && attempts < MAX_PORT_ATTEMPTS) {
+    attempts += 1;
+    currentPort += 1;
+    console.warn(`Port in use. Retrying on ${currentPort} (${attempts}/${MAX_PORT_ATTEMPTS})...`);
+    setTimeout(listen, 200);
+    return;
+  }
+
+  console.error('Server failed to start:', error.message);
+  process.exit(1);
+});
+
+listen();
