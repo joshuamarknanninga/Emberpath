@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, BrainCircuit, Database, MapPinned, PackageCheck, Users } from 'lucide-react';
+import { ArrowRight, BrainCircuit, Database, MapPinned, PackageCheck, Radio, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useRealtime } from '../hooks/useRealtime';
 import PageShell from '../components/PageShell';
 
 const quickCards = [
@@ -11,6 +12,8 @@ const quickCards = [
 ];
 
 export default function DashboardPage() {
+  const { connected, events } = useRealtime();
+
   return (
     <PageShell title="Dashboard" subtitle="Calm command surface for preparedness planning and field-ready execution." meta="Overview">
       <div className="card bg-radial p-6">
@@ -41,6 +44,22 @@ export default function DashboardPage() {
         <div className="card"><p className="muted-label">Saved Entries</p><p className="mt-2 text-2xl font-heading">12</p></div>
         <div className="card"><p className="muted-label">Map Reports</p><p className="mt-2 text-2xl font-heading">6</p></div>
         <div className="card"><p className="muted-label">Community Activity</p><p className="mt-2 flex items-center gap-2 text-2xl font-heading"><Users className="h-5 w-5 text-tealMuted" /> Active</p></div>
+      </div>
+
+      <div className="card">
+        <p className="muted-label">Realtime channel</p>
+        <p className="mt-2 flex items-center gap-2 text-sm text-slate-300">
+          <Radio className={`h-4 w-4 ${connected ? 'text-greenMuted' : 'text-slate-500'}`} />
+          {connected ? 'Connected to websocket stream' : 'Disconnected'}
+        </p>
+        <div className="mt-3 space-y-2">
+          {events.map((event, i) => (
+            <p key={`${event.timestamp}-${i}`} className="rounded-xl border border-slate-700/40 bg-slate-900/45 px-3 py-2 text-xs text-slate-300">
+              <span className="text-tealMuted">{event.event}</span> · {new Date(event.timestamp).toLocaleTimeString()}
+            </p>
+          ))}
+          {!events.length && <p className="text-xs text-slate-500">No live events yet.</p>}
+        </div>
       </div>
     </PageShell>
   );

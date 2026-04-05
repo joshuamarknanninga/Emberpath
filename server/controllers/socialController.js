@@ -16,6 +16,13 @@ const feed = async (req, res) => {
 
 const createPost = async (req, res) => {
   const post = await SocialPost.create({ user: req.userId, content: req.body.content, tags: req.body.tags || [] });
+
+  req.app.locals.broadcast('social.post.created', {
+    id: post._id,
+    content: post.content,
+    tags: post.tags
+  });
+
   res.status(201).json(post);
 };
 
@@ -25,6 +32,13 @@ const createComment = async (req, res) => {
     user: req.userId,
     content: req.body.content
   });
+
+  req.app.locals.broadcast('social.comment.created', {
+    id: comment._id,
+    post: comment.post,
+    content: comment.content
+  });
+
   res.status(201).json(comment);
 };
 
@@ -34,6 +48,13 @@ const sendMessage = async (req, res) => {
     toUser: req.body.toUser,
     content: req.body.content
   });
+
+  req.app.locals.broadcast('social.message.sent', {
+    id: message._id,
+    toUser: message.toUser,
+    preview: message.content.slice(0, 120)
+  });
+
   res.status(201).json(message);
 };
 

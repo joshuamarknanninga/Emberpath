@@ -123,11 +123,13 @@ EMBERPATH is a production-shaped survival knowledge platform with structured ent
 3. Ensure MongoDB is running locally.
 4. Seed data:
    - `npm --prefix server run seed`
-5. Run backend:
-   - `npm --prefix server run dev`
-6. Run frontend:
-   - `npm --prefix client run dev`
-7. Open `http://localhost:5173`.
+5. Run both server and Vite client concurrently:
+   - `npm run dev`
+6. Open `http://localhost:5173`.
+
+### Realtime WebSocket
+- WebSocket endpoint: `ws://localhost:5000/ws`
+- The dashboard subscribes to live system events (map/social updates).
 
 ## API Highlights
 

@@ -9,6 +9,15 @@ const listReports = async (req, res) => {
 const createReport = async (req, res) => {
   const report = await MapReport.create({ ...req.body, user: req.userId });
   await User.findByIdAndUpdate(req.userId, { $inc: { points: 5 } });
+
+  req.app.locals.broadcast('map.report.created', {
+    id: report._id,
+    title: report.title,
+    type: report.type,
+    lat: report.lat,
+    lng: report.lng
+  });
+
   res.status(201).json(report);
 };
 
