@@ -120,16 +120,17 @@ EMBERPATH is a production-shaped survival knowledge platform with structured ent
    - `cp server/.env.example server/.env`
 2. Install dependencies:
    - `npm run install:all`
-3. Ensure MongoDB is running locally.
+3. Ensure MongoDB is running locally (default: `mongodb://127.0.0.1:27017/emberpath` when `MONGO_URI` is not set).
 4. Seed data:
    - `npm --prefix server run seed`
 5. Run both server and Vite client:
    - `npm run dev`
-   - This script auto-installs client/server dependencies if missing.
+   - This script auto-installs dependencies if missing and auto-selects an available API port (starting from `5000`).
+   - It injects `VITE_API_BASE` and `VITE_WS_URL` for the client automatically.
 6. Open `http://localhost:5173`.
 
 ### Realtime WebSocket
-- WebSocket endpoint: `ws://localhost:5000/ws`
+- WebSocket endpoint: `ws://localhost:<selected-port>/ws` (the dev launcher auto-selects and injects this).
 - The dashboard subscribes to live system events (map/social updates).
 
 ## API Highlights
