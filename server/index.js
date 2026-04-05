@@ -34,15 +34,30 @@ wss.on('connection', (socket) => {
 });
 
 wss.on('error', (error) => {
-  // prevent unhandled error crash from ws when HTTP server emits startup errors
   console.warn(`[ws] ${error.code || 'error'}: ${error.message}`);
 });
 
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+const allowedOrigins = new Set([
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173'
+]);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.has(origin)) return callback(null, true);
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true
+  })
+);
 app.use(express.json());
 app.use(morgan('dev'));
 
-app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'EMBERPATH API', realtime: '/ws' }));
+app.get('/api/health', (req, res) =>
+  res.json({ status: 'ok', service: 'EMBERPATH API', realtime: '/ws', allowedOrigins: [...allowedOrigins].filter(Boolean) })
+);
 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/knowledge', require('./routes/knowledgeRoutes'));

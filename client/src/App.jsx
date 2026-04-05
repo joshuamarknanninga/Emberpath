@@ -45,7 +45,7 @@ export default function App() {
   }, [toast]);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout>
         <AppRoutes auth={auth} pushToast={pushToast} />
       </Layout>
