@@ -4,11 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "install:all": "npm --prefix server install && npm --prefix client install",
-    "dev": "concurrently -k \"npm:dev:server\" \"npm:dev:client\"",
+    "dev": "npm --prefix server run dev & npm --prefix client run dev",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev"
-  },
-  "devDependencies": {
-    "concurrently": "^9.0.1"
   }
 }
