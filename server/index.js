@@ -49,5 +49,26 @@ app.use('/api/social', require('./routes/socialRoutes'));
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server + WS running on ${PORT}`));
+const DEFAULT_PORT = Number(process.env.PORT || 5000);
+const MAX_PORT_ATTEMPTS = 10;
+
+const startServer = (port, attempt = 0) => {
+  server
+    .listen(port, () => {
+      const isFallback = port !== DEFAULT_PORT;
+      console.log(`Server + WS running on ${port}${isFallback ? ` (fallback from ${DEFAULT_PORT})` : ''}`);
+    })
+    .once('error', (error) => {
+      if (error.code === 'EADDRINUSE' && attempt < MAX_PORT_ATTEMPTS) {
+        const nextPort = port + 1;
+        console.warn(`Port ${port} is in use. Retrying on ${nextPort}...`);
+        setTimeout(() => startServer(nextPort, attempt + 1), 250);
+        return;
+      }
+
+      console.error('Server failed to start:', error.message);
+      process.exit(1);
+    });
+};
+
+startServer(DEFAULT_PORT);
