@@ -39,7 +39,7 @@ export const useRealtime = () => {
     return () => {
       closedByUser = true;
       if (reconnectRef.current) clearTimeout(reconnectRef.current);
-      if (socket && socket.readyState <= 1) socket.close();
+      if (socket && socket.readyState === WebSocket.OPEN) socket.close();
     };
   }, []);
 

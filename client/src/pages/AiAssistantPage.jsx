@@ -19,7 +19,7 @@ export default function AiAssistantPage({ pushToast }) {
       setResult(data.response);
       pushToast('Guidance generated with internal references.', 'success');
     } catch (error) {
-      pushToast('Login required for AI guidance route.', 'error');
+      pushToast('Unable to generate advice right now.', 'error');
     }
   };
 
