@@ -133,6 +133,9 @@ EMBERPATH is a production-shaped survival knowledge platform with structured ent
 - WebSocket endpoint: `ws://localhost:<selected-port>/ws` (the dev launcher auto-selects and injects this).
 - The dashboard subscribes to live system events (map/social updates).
 
+### Vite HMR note
+- Dev server is pinned to `5173` with explicit HMR websocket settings (`ws://localhost:5173`) to avoid browser websocket mismatch issues.
+
 ## API Highlights
 
 - Auth: `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/profile`
