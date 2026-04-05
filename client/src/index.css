@@ -2,10 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: dark;
+}
+
 body {
-  @apply bg-slate-950 text-slate-100 antialiased;
+  @apply font-body bg-ink text-mist antialiased;
+  background-image: radial-gradient(circle at 8% 10%, rgba(95, 140, 148, 0.14), transparent 34%),
+    radial-gradient(circle at 90% 0%, rgba(111, 141, 181, 0.14), transparent 32%),
+    linear-gradient(180deg, #030712, #020617 42%, #060d1d);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  @apply font-heading tracking-tight text-mist;
 }
 
 .card {
-  @apply rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-soft;
+  @apply rounded-2xl border border-slate-700/40 bg-panel/75 p-4 backdrop-blur-xl shadow-soft;
+}
+
+.glass-border {
+  @apply border border-slate-600/35;
+}
+
+.muted-label {
+  @apply text-xs uppercase tracking-[0.16em] text-slate-400;
 }
