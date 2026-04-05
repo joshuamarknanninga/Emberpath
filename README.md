@@ -134,7 +134,8 @@ EMBERPATH is a production-shaped survival knowledge platform with structured ent
 - The dashboard subscribes to live system events (map/social updates).
 
 ### Vite dev host note
-- Vite is bound to `127.0.0.1:5173` with strict port mode to keep HMR websocket behavior stable in local development.
+- Vite is bound to `127.0.0.1:5173` with strict port mode and explicit HMR websocket host/port to keep HMR stable in local development.
+- Service worker is registered only in production builds to avoid development-time HMR interference.
 
 ## API Highlights
 

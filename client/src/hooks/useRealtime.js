@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:5000/ws';
+const apiBase = import.meta.env.VITE_API_BASE || '';
 
 export const useRealtime = () => {
   const [connected, setConnected] = useState(false);
@@ -11,18 +12,36 @@ export const useRealtime = () => {
     let closedByUser = false;
     let socket;
 
-    const connect = () => {
+    const waitForApi = async () => {
+      try {
+        const response = await fetch(`${apiBase}/api/health`);
+        return response.ok;
+      } catch (error) {
+        return false;
+      }
+    };
+
+    const scheduleReconnect = () => {
+      if (closedByUser) return;
+      reconnectRef.current = setTimeout(connect, 1200);
+    };
+
+    const connect = async () => {
+      const apiReady = await waitForApi();
+      if (!apiReady) {
+        scheduleReconnect();
+        return;
+      }
+
       socket = new WebSocket(wsUrl);
 
       socket.onopen = () => setConnected(true);
       socket.onclose = () => {
         setConnected(false);
-        if (!closedByUser) {
-          reconnectRef.current = setTimeout(connect, 1200);
-        }
+        scheduleReconnect();
       };
       socket.onerror = () => {
-        // Intentionally quiet: transient startup ordering can briefly fail before server is ready.
+        // Quiet by design: retries happen automatically.
       };
       socket.onmessage = (message) => {
         try {
