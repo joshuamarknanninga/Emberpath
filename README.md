@@ -133,9 +133,8 @@ EMBERPATH is a production-shaped survival knowledge platform with structured ent
 - WebSocket endpoint: `ws://localhost:<selected-port>/ws` (the dev launcher auto-selects and injects this).
 - The dashboard subscribes to live system events (map/social updates).
 
-### Vite HMR note
-- Dev server uses explicit HMR websocket settings and defaults to `ws://127.0.0.1:5173` for better localhost compatibility.
-- You can override with `VITE_HMR_HOST`, `VITE_HMR_PORT`, and `VITE_HMR_CLIENT_PORT` if your network/proxy requires custom values.
+### Vite dev host note
+- Vite is bound to `127.0.0.1:5173` with strict port mode to keep HMR websocket behavior stable in local development.
 
 ## API Highlights
 

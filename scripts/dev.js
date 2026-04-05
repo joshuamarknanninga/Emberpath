@@ -70,10 +70,7 @@ const run = async () => {
     env: {
       ...process.env,
       VITE_API_BASE: `http://localhost:${apiPort}`,
-      VITE_WS_URL: `ws://localhost:${apiPort}/ws`,
-      VITE_HMR_HOST: process.env.VITE_HMR_HOST || '127.0.0.1',
-      VITE_HMR_PORT: process.env.VITE_HMR_PORT || '5173',
-      VITE_HMR_CLIENT_PORT: process.env.VITE_HMR_CLIENT_PORT || '5173'
+      VITE_WS_URL: `ws://localhost:${apiPort}/ws`
     }
   });
 
